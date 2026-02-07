@@ -1,68 +1,209 @@
-# CodeIgniter 4 Application Starter
+# SETUP CODEIGNITER 4 (CI4) – XAMPP WINDOWS
 
-## What is CodeIgniter?
+Dokumen ini **siap copas** untuk menjalankan CodeIgniter 4 menggunakan **XAMPP (Apache + PHP + MySQL)**.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+---
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+## 1. SYARAT WAJIB (CEK DULU)
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+### 1.1 XAMPP
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+* PHP **8.1 atau lebih baru**
+* Apache aktif
+* MySQL/MariaDB aktif (jika pakai database)
 
-## Installation & updates
+Cek versi PHP:
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+```bash
+php -v
+```
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+### 1.2 Aktifkan PHP Extension
 
-## Setup
+Buka file:
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+```
+C:\xampp\php\php.ini
+```
 
-## Important Change with index.php
+Pastikan **TIDAK ADA tanda ;** di depan baris ini:
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+```ini
+extension=intl
+extension=mbstring
+extension=curl
+extension=mysqli
+```
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+Simpan → **Restart Apache**.
 
-**Please** read the user guide for a better explanation of how CI4 works!
+---
 
-## Repository Management
+## 2. INSTALL CI4 (APP STARTER)
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+Buka **CMD / PowerShell**, lalu copas:
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+```bash
+cd C:\xampp\htdocs
+composer create-project codeigniter4/appstarter ci4-app
+cd ci4-app
+```
 
-## Server Requirements
+---
 
-PHP version 8.1 or higher is required, with the following extensions installed:
+## 3. SETUP FILE .ENV
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+### 3.1 Copy env → .env
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> - The end of life date for PHP 8.1 will be December 31, 2025.
+CMD:
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+```bat
+copy env .env
+```
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+PowerShell:
+
+```powershell
+Copy-Item env .env
+```
+
+### 3.2 ISI FILE .env (COPAS FULL)
+
+Buka file `.env`, **replace semua isinya** dengan ini:
+
+```ini
+CI_ENVIRONMENT = development
+
+app.baseURL = 'http://localhost/ci4/'
+app.indexPage = ''
+
+# ==============================
+# DATABASE (MySQL)
+# ==============================
+database.default.hostname = localhost
+database.default.database = ci4_db
+database.default.username = root
+database.default.password =
+database.default.DBDriver = MySQLi
+database.default.port = 3306
+
+# ==============================
+# SECURITY
+# ==============================
+encryption.key = 12345678901234567890123456789012
+```
+
+> Buat database di phpMyAdmin dengan nama **ci4_db** (atau ganti sesuai kebutuhan).
+
+---
+
+## 4. SETUP APACHE (WAJIB KE FOLDER PUBLIC)
+
+CI4 **HARUS** diakses lewat folder `public`.
+
+### 4.1 Edit Apache Config
+
+Buka file:
+
+```
+C:\xampp\apache\conf\extra\httpd.conf
+```
+
+Tambahkan **di bagian paling bawah**:
+
+```apache
+Alias /ci4 "C:/xampp/htdocs/ci4-app/public"
+
+<Directory "C:/xampp/htdocs/ci4-app/public">
+    AllowOverride All
+    Require all granted
+</Directory>
+```
+
+### 4.2 Aktifkan mod_rewrite
+
+Pastikan baris ini **TIDAK DIKOMENTARI**:
+
+```apache
+LoadModule rewrite_module modules/mod_rewrite.so
+```
+
+Restart **Apache**.
+
+---
+
+## 5. AKSES APLIKASI
+
+Buka browser:
+
+```
+http://localhost/ci4
+```
+
+Jika benar, akan muncul **Welcome to CodeIgniter 4** 🎉
+
+---
+
+## 6. JALANKAN VIA TERMINAL (OPSIONAL)
+
+Kalau mau tanpa Apache:
+
+```bash
+php spark serve
+```
+
+Akses:
+
+```
+http://localhost:8080
+```
+
+---
+
+## 7. ERROR YANG SERING TERJADI
+
+### ❌ 404 / Blank Page
+
+* Salah `baseURL`
+* Apache belum restart
+* Tidak akses folder `public`
+
+### ❌ Class / Controller tidak kebaca
+
+```bash
+php spark app:update
+composer dump-autoload
+```
+
+### ❌ Database error
+
+* DB belum dibuat
+* Username/password salah
+
+---
+
+## 8. STRUKTUR PENTING CI4
+
+```
+ci4-app/
+├── app/
+├── public/   <-- WAJIB (index.php di sini)
+├── writable/
+├── vendor/
+├── .env
+```
+
+---
+
+## SELESAI ✅
+
+CI4 siap dipakai untuk CRUD, API, Auth, dll.
+
+Kalau mau lanjut:
+
+* Setup login
+* CRUD MySQL
+* Struktur MVC CI4
+* Base URL helper
+
+Tinggal bilang 👍
