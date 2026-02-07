@@ -24,14 +24,19 @@ $routes->get('logout', 'CustomerAuthController::logout');
 
 // app/Config/Routes.php
 $routes->get('promo', 'ShopController::promo');
+$routes->get('kontak', 'ShopController::kontak');
 
 // Customer protected
 $routes->group('', ['filter' => 'customerauth'], function ($routes) {
     $routes->get('checkout', 'CheckoutController::index', ['filter' => 'customerauth']);
     $routes->post('checkout', 'CheckoutController::placeOrder', ['filter' => 'customerauth']);
 
+    // ✅ RIWAYAT PESANAN
+    $routes->get('orders', 'OrderController::index');
+
     $routes->get('order/(:segment)', 'OrderController::show/$1');
     $routes->get('order/(:segment)/wa', 'OrderController::whatsapp/$1');
+
 
 });
 
@@ -83,6 +88,8 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function ($rou
 
 
         $routes->get('reports/finance', 'ReportController::finance');
+        $routes->get('settings/kontak', 'SettingsController::kontak');
+        $routes->post('settings/kontak', 'SettingsController::kontakSave');
 
 
         $routes->get('banners', 'BannerController::index');

@@ -40,6 +40,19 @@
     </div>
 
     <div>
+        <label class="text-sm text-gray-600">Link Shopee</label>
+        <input type="url" name="shopee_link" value="<?= esc(old('shopee_link')) ?>" class="w-full border rounded-lg p-2"
+            placeholder="https://shopee.co.id/namatoko/...">
+    </div>
+
+    <div>
+        <label class="text-sm text-gray-600">Link TikTok</label>
+        <input type="url" name="tiktok_link" value="<?= esc(old('tiktok_link')) ?>" class="w-full border rounded-lg p-2"
+            placeholder="https://www.tiktok.com/@username">
+    </div>
+
+
+    <div>
         <label class="text-sm text-gray-600">Gambar (opsional)</label>
         <input type="file" name="image" class="w-full border rounded-lg p-2">
     </div>

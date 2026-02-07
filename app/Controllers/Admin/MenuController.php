@@ -54,6 +54,9 @@ class MenuController extends BaseController
         $name = trim((string) $this->request->getPost('name'));
         $description = trim((string) $this->request->getPost('description'));
         $price = (int) $this->request->getPost('price');
+        $shopeeLink = trim((string) $this->request->getPost('shopee_link'));
+        $tiktokLink = trim((string) $this->request->getPost('tiktok_link'));
+
         $categoryId = $this->request->getPost('category_id'); // bisa kosong
         $isActive = $this->request->getPost('is_active') ? 1 : 0;
 
@@ -89,6 +92,9 @@ class MenuController extends BaseController
             'price' => $price,
             'image' => $imagePath,
             'is_active' => $isActive,
+
+            'shopee_link' => ($shopeeLink !== '' ? $shopeeLink : null),
+            'tiktok_link' => ($tiktokLink !== '' ? $tiktokLink : null),
         ]);
 
         return redirect()->to('/admin/menus')->with('success', 'Menu berhasil ditambahkan.');
@@ -133,6 +139,9 @@ class MenuController extends BaseController
         $price = (int) $this->request->getPost('price');
         $categoryId = $this->request->getPost('category_id');
         $isActive = $this->request->getPost('is_active') ? 1 : 0;
+        $shopeeLink = trim((string) $this->request->getPost('shopee_link'));
+        $tiktokLink = trim((string) $this->request->getPost('tiktok_link'));
+
 
         if ($name === '' || $price <= 0) {
             return redirect()->back()->withInput()->with('error', 'Nama dan harga wajib (harga > 0).');
@@ -144,6 +153,9 @@ class MenuController extends BaseController
             'description' => ($description !== '' ? $description : null),
             'price' => $price,
             'is_active' => $isActive,
+
+            'shopee_link' => ($shopeeLink !== '' ? $shopeeLink : null),
+            'tiktok_link' => ($tiktokLink !== '' ? $tiktokLink : null),
         ];
 
         // upload image baru (opsional)

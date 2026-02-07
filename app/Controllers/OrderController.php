@@ -6,9 +6,37 @@ use App\Models\OrderModel;
 use App\Models\OrderItemModel;
 use App\Models\WaTemplateModel;
 
-
 class OrderController extends BaseController
 {
+    // ✅ RIWAYAT PESANAN (untuk user login)
+    public function index()
+    {
+        // cek login (customerauth harusnya sudah handle, ini safety)
+        $loggedIn = (bool) session()->get('customer_logged_in');
+        if (!$loggedIn) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        // Ambil nomor HP customer dari session
+        $customerPhone = (string) (session()->get('customer_phone') ?? '');
+        $customerPhone = preg_replace('/\D+/', '', $customerPhone);
+
+        if ($customerPhone === '') {
+            return redirect()->to('/')->with('error', 'Data akun tidak lengkap (nomor HP tidak ditemukan).');
+        }
+
+        // Ambil orders berdasarkan customer_phone (karena kolom customer_id tidak ada)
+        $orders = (new OrderModel())
+            ->where('customer_phone', $customerPhone)
+            ->orderBy('id', 'DESC')
+            ->findAll();
+
+        return view('orders/index', [
+            'title' => 'Riwayat Pembelian',
+            'orders' => $orders,
+        ]);
+    }
+
     public function show(string $invoice)
     {
         $order = (new OrderModel())->where('invoice', $invoice)->first();
@@ -78,14 +106,12 @@ class OrderController extends BaseController
         // WA butuh urlencode
         $message = rawurlencode($message);
 
-
         // Nomor tujuan admin WA (set di .env)
         // contoh: ADMIN_WA_NUMBER=62812xxxxxxx
         $adminWa = getenv('ADMIN_WA_NUMBER') ?: '';
         $adminWa = preg_replace('/\D+/', '', $adminWa);
 
         if ($adminWa === '') {
-            // fallback: kirim ke nomor customer (tidak ideal), lebih baik wajib isi env
             return redirect()->to("/order/{$invoice}")
                 ->with('error', 'Nomor WhatsApp admin belum diset. Set ADMIN_WA_NUMBER di .env');
         }

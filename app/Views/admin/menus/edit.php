@@ -41,6 +41,20 @@
         <input type="number" name="price" value="<?= esc(old('price') ?? $menu['price']) ?>"
             class="w-full border rounded-lg p-2" min="1" required>
     </div>
+    <div>
+  <label class="text-sm text-gray-600">Link Shopee (opsional)</label>
+  <input type="url" name="shopee_link"
+         value="<?= esc(old('shopee_link') ?? ($menu['shopee_link'] ?? '')) ?>"
+         class="w-full border rounded-lg p-2">
+</div>
+
+<div>
+  <label class="text-sm text-gray-600">Link TikTok (opsional)</label>
+  <input type="url" name="tiktok_link"
+         value="<?= esc(old('tiktok_link') ?? ($menu['tiktok_link'] ?? '')) ?>"
+         class="w-full border rounded-lg p-2">
+</div>
+
 
     <div>
         <label class="text-sm text-gray-600">Gambar (opsional)</label>

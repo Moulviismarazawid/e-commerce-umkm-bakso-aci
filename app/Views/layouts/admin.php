@@ -20,6 +20,8 @@ $nav = [
     ['label' => 'Promo', 'href' => '/admin/promo', 'icon' => 'ticket'],
     ['label' => 'Order', 'href' => '/admin/orders', 'icon' => 'shopping-bag'],
     ['label' => 'Antrian', 'href' => '/admin/queue', 'icon' => 'list-ordered'],
+    ['label' => 'Kontak', 'href' => '/admin/settings/kontak', 'icon' => 'link'],
+
     ['label' => 'Template WA', 'href' => '/admin/wa-templates', 'icon' => 'message-circle'],
     ['label' => 'Laporan', 'href' => '/admin/reports/finance', 'icon' => 'bar-chart-3'],
 ];
@@ -27,8 +29,10 @@ $nav = [
 function isActive(string $current, string $href): bool
 {
     // aktif jika exact match atau current dimulai dengan href (untuk /admin/orders/12 dll)
-    if ($current === $href) return true;
-    if (str_starts_with($current, rtrim($href, '/') . '/')) return true;
+    if ($current === $href)
+        return true;
+    if (str_starts_with($current, rtrim($href, '/') . '/'))
+        return true;
     return false;
 }
 ?>
@@ -40,8 +44,7 @@ function isActive(string $current, string $href): bool
         <div id="overlay" class="fixed inset-0 bg-black/40 z-40 hidden md:hidden"></div>
 
         <!-- Sidebar (Desktop + Mobile Drawer) -->
-        <aside id="sidebar"
-            class="fixed md:static z-50 md:z-auto inset-y-0 left-0 w-72 md:w-64 bg-white border-r
+        <aside id="sidebar" class="fixed md:static z-50 md:z-auto inset-y-0 left-0 w-72 md:w-64 bg-white border-r
                    transform -translate-x-full md:translate-x-0 transition-transform duration-200">
 
             <!-- Brand -->
@@ -99,10 +102,10 @@ function isActive(string $current, string $href): bool
                 </div>
 
                 <div class="mt-4 pt-4 border-t">
-                    <a href="/admin/logout"
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm border
+                    <a href="/admin/logout" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm border
                                bg-red-50 text-red-700 border-red-100 hover:bg-red-100">
-                        <span class="w-9 h-9 rounded-xl bg-white border border-red-100 flex items-center justify-center">
+                        <span
+                            class="w-9 h-9 rounded-xl bg-white border border-red-100 flex items-center justify-center">
                             <i data-lucide="log-out" class="w-4 h-4"></i>
                         </span>
                         <span class="font-medium">Logout</span>
@@ -139,7 +142,8 @@ function isActive(string $current, string $href): bool
                     </div>
 
                     <div class="flex items-center gap-2">
-                        <a href="/" target="_blank" class="px-3 py-2 rounded-xl border bg-white hover:bg-gray-50 text-sm inline-flex items-center gap-2">
+                        <a href="/" target="_blank"
+                            class="px-3 py-2 rounded-xl border bg-white hover:bg-gray-50 text-sm inline-flex items-center gap-2">
                             <i data-lucide="external-link" class="w-4 h-4"></i> Lihat Website
                         </a>
                     </div>
